@@ -1,4 +1,4 @@
-package main
+package combinator
 
 import (
 	"reflect"
@@ -7,7 +7,9 @@ import (
 
 func Combinations(container interface{}, length uint) interface{} {
 	containerType := reflect.TypeOf(container)
-	if containerType.Kind() != reflect.Slice { panic("argument must be a slice") }
+	if containerType.Kind() != reflect.Slice {
+		panic("argument must be a slice")
+	}
 
 	type Position = int
 	nPerM := func(n Position, m Position) Position {
@@ -29,7 +31,9 @@ func Combinations(container interface{}, length uint) interface{} {
 	)
 
 	positions := make([]Position, length)
-	for i := 0; i < Position(length); i++ { positions[i] = i }
+	for i := 0; i < Position(length); i++ {
+		positions[i] = i
+	}
 	maxPosition := func(position Position) Position {
 		return nrElements + position - Position(length)
 	}
@@ -41,7 +45,7 @@ func Combinations(container interface{}, length uint) interface{} {
 				return false
 			} else {
 				res := increment(position - 1)
-				positions[position] = positions[position - 1] + 1
+				positions[position] = positions[position-1] + 1
 				return res
 			}
 		}
@@ -64,12 +68,16 @@ func Combinations(container interface{}, length uint) interface{} {
 
 func Permutations(container interface{}, length uint) interface{} {
 	containerType := reflect.TypeOf(container)
-	if containerType.Kind() != reflect.Slice { panic("argument must be a slice") }
+	if containerType.Kind() != reflect.Slice {
+		panic("argument must be a slice")
+	}
 
 	type Position = int
 	var nPerM func(Position, Position) Position
 	nPerM = func(n Position, m Position) Position {
-		if m > 1 { return n * nPerM(n - 1, m - 1) }
+		if m > 1 {
+			return n * nPerM(n-1, m-1)
+		}
 		return n
 	}
 
@@ -80,26 +88,30 @@ func Permutations(container interface{}, length uint) interface{} {
 	permutations := reflect.MakeSlice(reflect.SliceOf(reflect.SliceOf(elementType)), 0, size)
 
 	positions := make([]Position, length)
-	for i := 0; i < Position(length); i++ { positions[i] = i }
+	for i := 0; i < Position(length); i++ {
+		positions[i] = i
+	}
 	insertUnique := func(position Position, value Position) {
 		prevValue := -1
 		for {
 			add := 0
 			for i := 0; i < position; i++ {
-				if (prevValue + 1 < positions[i] + 1) && (positions[i] <= value) {
+				if (prevValue+1 < positions[i]+1) && (positions[i] <= value) {
 					add++
 				}
 			}
 			prevValue = value
 			value += add
-			if prevValue == value { break }
+			if prevValue == value {
+				break
+			}
 		}
 		positions[position] = value
 	}
 	goTo := func(index Position) {
 		nrElementsCopy := nrElements
 		for i := 0; i < int(length); i++ {
-			insertUnique(i, index % nrElementsCopy)
+			insertUnique(i, index%nrElementsCopy)
 			index /= nrElementsCopy
 			nrElementsCopy--
 		}
@@ -121,9 +133,13 @@ func Permutations(container interface{}, length uint) interface{} {
 
 func CartesianProducts(containers interface{}) interface{} {
 	containersType := reflect.TypeOf(containers)
-	if containersType.Kind() != reflect.Slice { panic("argument must be a slice") }
+	if containersType.Kind() != reflect.Slice {
+		panic("argument must be a slice")
+	}
 	containerType := containersType.Elem()
-	if containerType.Kind() != reflect.Slice { panic("argument must be a slice") }
+	if containerType.Kind() != reflect.Slice {
+		panic("argument must be a slice")
+	}
 
 	type Position = int
 	elementType := containerType.Elem()
@@ -161,9 +177,13 @@ func CartesianProducts(containers interface{}) interface{} {
 
 func Twines(containers interface{}) interface{} {
 	containersType := reflect.TypeOf(containers)
-	if containersType.Kind() != reflect.Slice { panic("argument must be a slice") }
+	if containersType.Kind() != reflect.Slice {
+		panic("argument must be a slice")
+	}
 	containerType := containersType.Elem()
-	if containerType.Kind() != reflect.Slice { panic("argument must be a slice") }
+	if containerType.Kind() != reflect.Slice {
+		panic("argument must be a slice")
+	}
 
 	type Position = int
 	containersValue := reflect.ValueOf(containers)
